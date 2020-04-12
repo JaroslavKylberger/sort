@@ -1,15 +1,42 @@
 package cz.kylberger.sort;
 
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestName;
+
+import java.util.Arrays;
+import java.util.Random;
 
 import static org.junit.Assert.assertArrayEquals;
 
 public class SortTest {
 
-    private final int[] testArray1 = new int[]{1, 3, 5, 4, 6, 13, 10, 9, 8, 15, 17};
-    private final int[] testArray1Sorted = new int[]{1, 3, 4, 5, 6, 8, 9, 10, 13, 15, 17};
-    private final int[] testArray2 = new int[]{1, 5, 3, 30078, 4, 2};
-    private final int[] testArray2Sorted = new int[]{1, 2, 3, 4, 5, 30078};
+    public static final int TEST_ARRAY_SIZE = 10000;
+    private static int[] testArray;
+    private static int[] testArraySorted;
+
+    @Rule
+    public final TestName name = new TestName();
+
+    @BeforeClass
+    public static void beforeClass() {
+        testArray = new int[TEST_ARRAY_SIZE];
+        Random rd = new Random();
+        for (int i = 0; i < TEST_ARRAY_SIZE; i++) {
+            testArray[i] = rd.nextInt();
+        }
+        testArraySorted = cloneArray(testArray);
+        long startTime = System.nanoTime();
+        Arrays.sort(testArraySorted);
+        long endTime = System.nanoTime();
+        System.out.println(String.format("%,d elements", TEST_ARRAY_SIZE));
+        System.out.println(String.format("%-30s: %,10d  nanos", "Arrays.sort", (endTime - startTime)));
+    }
+
+    private static int[] cloneArray(int[] arr) {
+        int[] arrCopy = new int[arr.length];
+        System.arraycopy(arr, 0, arrCopy, 0, arr.length);
+        return arrCopy;
+    }
 
     @Test
     public void quickSortTest() {
@@ -32,10 +59,12 @@ public class SortTest {
     }
 
     private void sortTest(Sort sortAlg) {
-        sortAlg.sort(testArray1);
-        assertArrayEquals(testArray1Sorted, testArray1);
-        sortAlg.sort(testArray2);
-        assertArrayEquals(testArray2Sorted, testArray2);
+        int[] arr = cloneArray(testArray);
+        long startTime = System.nanoTime();
+        sortAlg.sort(arr);
+        long endTime = System.nanoTime();
+        assertArrayEquals(arr, testArraySorted);
+        System.out.println(String.format("%-30s: %,10d  nanos", name.getMethodName(), (endTime - startTime)));
     }
 
     private void printArray(int[] arr) {
