@@ -67,11 +67,11 @@ public class SortTest {
         System.out.println(String.format("%-30s: %,10d  nanos", name.getMethodName(), (endTime - startTime)));
     }
 
-    private void printArray(int[] arr) {
-        for (int i : arr) {
-            System.out.print(i + " ");
-        }
-        System.out.println();
-    }
+//    private void printArray(int[] arr) {
+//        for (int i : arr) {
+//            System.out.print(i + " ");
+//        }
+//        System.out.println();
+//    }
 
 }
